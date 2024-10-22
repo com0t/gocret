@@ -1,4 +1,4 @@
-module github.com
+module github.com/com0t/gocret
 
 go 1.23
 
