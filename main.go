@@ -288,7 +288,6 @@ func splitHeader(header string) []string {
 
 func processURL(url string, options *Options, httpReq *HTTPReq, done <-chan struct{}) *URLResult {
 	links, err := httpReq.findLinks(url, options)
-	fmt.Println(links)
 	if err != nil {
 		return nil
 	}
