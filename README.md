@@ -2,7 +2,9 @@
 
 # Install
 
-`go install github.com/com0t/gocret@latest`
+```
+go install github.com/com0t/gocret@latest
+```
 
 # Usage
 ```
