@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Results</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 1em;
+        text-align: left;
+        table-layout: fixed; /* Cố định bố cục bảng */
+      }
+
+      th,
+      td {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      tr:hover {
+        background-color: #e0f7fa;
+        cursor: pointer;
+      }
+
+      td {
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+      }
+
+      .filter-container {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="filter-container">
+      <label for="urlFilter">Filter by URL:</label>
+      <input
+        type="text"
+        id="urlFilter"
+        onkeyup="filterTable()"
+        placeholder="Enter URL to filter..."
+      />
+
+      <label for="urlFilter">Filter by Link:</label>
+      <input
+        type="text"
+        id="urlLink"
+        onkeyup="filterTable()"
+        placeholder="Enter URL to filter..."
+      />
+
+      <label for="secretsFilter" style="margin-left: 20px"
+        >Filter by Secrets:</label
+      >
+      <input
+        type="text"
+        id="secretsFilter"
+        onkeyup="filterTable()"
+        placeholder="Enter Secret to filter..."
+      />
+    </div>
+
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th style="width: 20%">URL</th>
+          <th style="width: 50%">Link</th>
+          <th style="width: 30%">Secrets</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Data will be inserted dynamically here -->
+      </tbody>
+    </table>
+
+    <script>
+      const data = [
+        {
+          URL: "mcredit.com.vn",
+          Results: [
+            {
+              Link: "https://mcredit.com.vn/js/output/common.min.js?v=01-10-2024",
+              Secrets: ['APP_ID="1422922794541985732"'],
+            },
+            {
+              Link: "https://mcredit.com.vn/vi/tra-cuu-dia-diem",
+              Secrets: ['ApiKey = "VQ4S9cFEB8iiJRdy2WH1557QZtAmXKZIwEVQfUxK"'],
+            },
+            {
+              Link: "https://cpn.vn/",
+              Secrets: ['Config    : {"visit_cookie_name"'],
+            },
+          ],
+        },
+        {
+          URL: "127.0.0.1",
+          Results: [
+            {
+              Link: "http://127.0.0.1/test.txt",
+              Secrets: ['access_key="12312312312"', 'access_key="12312312312"'],
+            },
+          ],
+        },
+      ];
+      function escapeHtml(unsafe) {
+        return unsafe
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function populateTable() {
+        const tableBody = document.getElementById("tableBody");
+        data.forEach((item) => {
+          item.Results.forEach((result) => {
+            const row = document.createElement("tr");
+
+            const urlCell = document.createElement("td");
+            urlCell.textContent = item.URL;
+
+            const linkCell = document.createElement("td");
+            const linkAnchor = document.createElement("a");
+            linkAnchor.href = result.Link;
+            linkAnchor.textContent = result.Link;
+            linkAnchor.target = "_blank";
+            linkCell.appendChild(linkAnchor);
+
+            const secretsCell = document.createElement("td");
+            secretsCell.innerHTML = result.Secrets.map((secret) =>
+              escapeHtml(secret)
+            ).join("<br><hr>");
+
+            row.appendChild(urlCell);
+            row.appendChild(linkCell);
+            row.appendChild(secretsCell);
+
+            tableBody.appendChild(row);
+          });
+        });
+      }
+
+      function filterTable() {
+        const urlFilter = document
+          .getElementById("urlFilter")
+          .value.toLowerCase();
+        const linkFilter = document
+          .getElementById("urlLink")
+          .value.toLowerCase();
+        const secretsFilter = document
+          .getElementById("secretsFilter")
+          .value.toLowerCase();
+        const rows = document.querySelectorAll("#resultsTable tbody tr");
+
+        rows.forEach((row) => {
+          const urlCell = row.cells[0].textContent.toLowerCase();
+          const secretsCell = row.cells[2].textContent.toLowerCase();
+
+          let showRow = true;
+
+          if (urlFilter.startsWith("!")) {
+            const keyword = urlFilter.slice(1);
+            if (urlCell.indexOf(keyword) > -1) {
+              showRow = false;
+            }
+          } else if (urlCell.indexOf(urlFilter) === -1) {
+            showRow = false;
+          }
+
+          if (linkFilter.startsWith("!")) {
+            const keyword = linkFilter.slice(1);
+            if (urlCell.indexOf(keyword) > -1) {
+              showRow = false;
+            }
+          } else if (urlCell.indexOf(linkFilter) === -1) {
+            showRow = false;
+          }
+
+          if (secretsFilter.startsWith("!")) {
+            const keyword = secretsFilter.slice(1);
+            if (secretsCell.indexOf(keyword) > -1) {
+              showRow = false;
+            }
+          } else if (secretsCell.indexOf(secretsFilter) === -1) {
+            showRow = false;
+          }
+
+          row.style.display = showRow ? "" : "none";
+        });
+      }
+
+      window.onload = populateTable;
+    </script>
+  </body>
+</html>
