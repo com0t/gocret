@@ -1,12 +1,31 @@
 # gocret
+`gocret` is a powerful and efficient Go-based tool designed to scan and identify sensitive information such as credentials, secrets, and tokens in web applications. It leverages HTTP requests to analyze JavaScript files and other web resources, helping developers and security professionals detect potential security vulnerabilities.
+
+# Features
++ Fast and Lightweight: Written in Go for performance, `gocret` quickly analyzes web targets.
++ Targeted Scanning: Specify the URL to scan for sensitive information.
++ Credential Detection: Identifies API keys, tokens, passwords, and other sensitive data hidden in web content.
++ Easy to Use: Simple command-line interface for quick and effective scanning.
++ Context Timeout Handling: Automatically handles timeouts for large or slow responses, providing robust scanning capabilities even for complex web applications.
 
 # Install
-
+To install `gocret`, make sure you have Go installed, then run the following command:
 ```
 go install github.com/com0t/gocret@latest
 ```
 
 # Usage
+To scan a target URL, use the following command:
+```
+gocret -u https://example.com/
+```
+This command will scan the specified JavaScript file for any potential credentials or secrets and output the results to the console.
+
+```
+gocret -u https://example.com/path/to/target.js
+```
+
+# Command Line Flags
 ```
 Usage of gocret:
   -H value
